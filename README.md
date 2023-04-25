@@ -4,7 +4,8 @@
 
 ---
 
-## Concepts
+
+# Concepts
 ### High-Level
   +  It's abstracted from the low-level workings of the computer it is running on.
   +  It has great flexibility (using functions as objects) and provides a lot of different data structures to `work with without worrying about how they work internally`.
@@ -88,7 +89,7 @@ Example:
   > I should wait for 3 seconds before execution
   ```
 ---
-## BASICS
+# BASICS
 ### Primitives
 + Anything other than the primitives are object.
 + Example:
@@ -256,6 +257,103 @@ Example:
       myDisplay()
     ```
 ### Modules
++ JavaScript modules allow you to break up your code into separate files.
++ This makes it easier to maintain a code-base.
++ **Named Export**
+  ```js
+  //in-line export
+  export const name='shri'
+  export const age=20
+
+  //all-at-once export
+  const name='shri'
+  const age=20
+  export {name,age}
+  ```
++ **Named Import**
+  ```js
+  import {name,age} from "file_loc/file_name.js"
+  ```
++ **Default Export**
+  ```js
+  const message = () => {
+    const name = "Jesse";
+    const age = 40;
+    return name + ' is ' + age + 'years old.';
+  };
+
+  export default message;
+  ```
++ **Default Import**
+  ```js
+  import message from "file_loc/file_name.js"
+  ```
+
+### JS-DOM
++ When a web page is loaded, the browser creates a Document Object Model of the page.
++ The HTML DOM model is constructed as a tree of Objects:
+![image](https://user-images.githubusercontent.com/94846398/234317506-6f43a2d8-ddd6-4d0c-9d7b-b93edb2b68ca.png)
++ With the object model, JavaScript gets all the power it needs to create dynamic HTML:
+  + Change all the HTML elements
+  + Change all the HTML attributes
+  + Change all the CSS styles
+  + Can remove existing HTML elements and attributes
+  + Can add new HTML elements and attributes
+  + Can react to all existing HTML events
+  + Can create new HTML events in the page
++ **Finding HTML Elements**
+  ```js
+  document.getElementById(id)	//Find an element by element id
+  document.getElementsByTagName(name)	//Find elements by tag name
+  document.getElementsByClassName(name)	//Find elements by class name
+  ```
++ **Finding HTML Elements by CSS Selectors**
+  ```js
+  //selects based on ClassName or id or TagName
+  const sub_btn = document.querySelector('submit-btn')
+  const buttons = document.querySelectorAll("btn");
+  ```
+
++ **Changing HTML Elements**
+  ```js
+  element.innerHTML =  new html content	//Change the inner HTML of an element
+  document.getElementById("p1").innerHTML = "New text!";
+
+  element.attribute = new value	//Change the attribute value of an HTML element
+  element.setAttribute(attribute, value)	//Change the attribute value of an HTML element
+  document.getElementById("element").setAttribute(id, 'name')  //Set id for element
+
+
+  element.style.property = new style	//Change the style of an HTML element
+  document.getElementById("p2").style.color = "blue";
+  
+  
+  document.getElementById("myImage").src = "landscape.jpg"; //Add image source
+  document.getElementById("demo").innerHTML = "Date : " + Date();   //Dynamic html content
+  ```
++ **Adding and Deleting Elements**
+  ```js
+  document.createElement(element)	//Create an HTML element
+  document.removeChild(element)	//Remove an HTML element
+  document.appendChild(element)	//Add an HTML element
+  document.replaceChild(new, old)	//Replace an HTML element
+  document.write(text)	//Write into the HTML output stream
+  ```
++ **Adding Events Handlers**
+  ```js
+  document.getElementById(id).onclick = function(){code}	A//dding event handler code to an onclick event
+  ```
++ **Form Validation**
+  + If a form field (fname) is empty, this function alerts a message, and returns false, to prevent the form from being submitted:
+  ```js
+  function validateForm() {
+    let x = document.forms["myForm"]["fname"].value;
+    if (x == "") {
+      alert("Name must be filled out");
+      return false;
+    }
+  }
+  ```
 
 
 ## Advanced Concepts
