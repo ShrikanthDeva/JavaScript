@@ -104,6 +104,8 @@ Example:
 
 ### Functions
 + Functions are objects
++ `DECLARATION/DEFINITION` -> **Global Code Scope**
++ `EXPRESSION` -> **Local Code Scope**
 + **Definition**
   + `Function` keyword used by itself
   ```js
@@ -341,20 +343,21 @@ Example:
   ```
 + **Adding Events Handlers**
   ```js
-  document.getElementById(id).onclick = function(){code}	A//dding event handler code to an onclick event
+  document.getElementById(id).onclick = function(){code}	//Adding event handler code to an onclick event
+  document.getElementById("myBtn").addEventListener("click", displayDate);
   ```
 + **Form Validation**
-  + If a form field (fname) is empty, this function alerts a message, and returns false, to prevent the form from being submitted:
+  + If a form field (name) is empty, this function alerts a message, and returns false, to prevent the form from being submitted:
   ```js
   function validateForm() {
-    let x = document.forms["myForm"]["fname"].value;
+    let x = document.forms["myForm"]["name"].value;
     if (x == "") {
       alert("Name must be filled out");
       return false;
     }
   }
   ```
-
+---
 
 ## Advanced Concepts
 
@@ -362,15 +365,17 @@ Example:
 + The **prototype chain** is a mechanism that allows objects to inherit properties and methods from other objects. Every object can have exactly one prototype object. That prototype object can also have a prototype object, and so on, creating a chain of inherited properties and methods. The end of this chain is called the `null` prototype.
   ```js
     const animal = {
-        eyes = true
-        face = true
+        eyes : true,
+        face : true,
     }
 
     const dog = {
-        leg = true
+        leg : true,
     }
 
     Object.setPrototypeOf(dog,animal)
+
+    consol.log(dog.eyes) //true
 
     Object.getPrototypeOf(dog) == animal   //true
 
@@ -380,24 +385,249 @@ Example:
 
   ```
 ### Destructuring
-```js
-  // Object destructuring
-  const person = {
-    name: 'John',
-    age: 32,
-    city: 'New York',
-    country: 'USA'
-  };
+  ```js
+    // Object destructuring
+    const person = {
+      name: 'John',
+      age: 32,
+      city: 'New York',
+      country: 'USA'
+    };
+     
+    // object destructuring 
+    const { name, age } = person;   // const name = person.name , const age = person.age
 
-  const { name, age } = person;
+    // Object destructuring with alias
 
-  // Object destructuring with alias
+    const { name: firstName, age: years } = person;
 
-  const { name: firstName, age: years } = person;
-
-  // Array destructuring
-  const fruits = ['apple', 'banana', 'orange'];
-  const [first, second, third] = fruits;
-```
+    // Array destructuring
+    const fruits = ['apple', 'banana', 'orange'];
+    const [first, second, third] = fruits;
+  ```
 ### Spread
-  
+  + The spread syntax `...` is a relatively new operator that was introduced in ES2018. It provides a concise way to combine objects and arrays.
+    ```js
+      const obj1 = {
+        first: 'a',
+        second: 'b',
+        third: 'c',
+      }
+      const obj2 = {
+        third: '3',
+        forth: '4',
+        // ... obj1 -> is also possible
+      }
+
+      // object assign -> combine one or more object with last argument as higher priority
+      const obj12 = Object.assign( {}, obj1, obj2 )
+      // spread operator
+      const obj12  =  { ...obj1, ...obj2}
+      obj12.third // '3'
+
+      // combining arrays
+      const arr1 = [1, 2, 3];
+      const arr2 = [4, 5, 6];
+      const arr3 = [...arr1, ...arr2];
+    ```
+
+### Optional Chaining
++ Optional chaining `?` is a relatively new operator that was introduced in ES2020.
++  It allows you to call object properties safely, without throwing an error.
++   When calling properties without this operator, you many crash your application with the error `Cannot read property 'foo' of undefined`.
+  ```js
+    const person = { };
+
+    const dude = person.name;
+    console.log(foo); // Uncaught TypeError: Cannot read property 'bar' of undefined
+
+    const dude = person?.name; // undefined
+  ```
+
+### Nullish Coalescing
++ Nullish coalescing is a relatively new operator **`??`** that was introduced in ES2020.
++  It is similar to the logical OR operator ||, but it only returns the right-hand side if the left-hand side is null or undefined.
++ **TRUTHY LIST**
+  + `true`
+  + `{}`
+  + `[]`
+  + `42`
+  + `"0"`
+  + `"false"`
+  + `new Date()`
+  + `-42`
+  + `12n`
+  + `Infinity`
++ **FALSY LIST**
+  + `null`
+  + `undefined`
+  + `0`
+  + `''`
+  ```js
+    const foo = null ?? 'bar';
+    console.log(foo); // 'bar'
+
+    const foo = 0 ?? 'bar';
+    console.log(foo); // 0
+  ```
+
+### Higher Order Functions
++ A higher order function is a function that takes a function as an argument, or returns a function. 
++ They are commonly used in functional programming, and are a powerful tool for abstracting away complexity.
+  ```js
+    // A function that takes a function as an argument
+    function add(x, y) {
+      return x + y;
+    }
+    function subtract(x, y) {
+      return x - y;
+    }
+    function math(x, y, operator) {
+      return operator(x, y);
+    }
+
+    math(5, 2, add); // 7
+
+    // A function returning another function
+
+    function fun(){
+      return function(message){
+        return 'Said...' + message
+      }
+    }
+
+    const fn = fun()
+    fn('hello')   // 'Said...hello
+  ```
+
+### Closures
++ A closure is a function that has access to the parent scope, even after the parent function has closed.
++  JS will automatically store the state of a closure in the heap memory, even after the parent function has returned.
++   This behavior makes them useful for encapsulating private variables.
++ Its not just a function, its a function combined with outer state
++ Used for **DATA ENCAPSULATION**
+```js
+    // lexical environment -> free variable -> this is closure
+    const state = 'happpy'
+
+    function whatstate () {
+      return `state is ${state}`  //captures
+    }
+
+    // no external data -> not a closure -> data (a,b) only stored in stack memory until function popped back of call stack
+    function add(a,b){
+      return a+b
+    }
+
+    function outer() = {
+      let x = 1
+      function inner() = {
+        x = x + 1
+      }
+      return inner
+    }
+
+    let increment = outer()
+    increment() // x = 2
+    increment() // x = 3
+  ```
+
+### More On Arrays
++ Create a Range of Numbers
+  ```js
+    const range = Array(100).fill(0).map((_, i) => i + 1);
+    // OR
+    const range = [...Array(100).keys()];
+  ```
++ Remove Duplicates from an Array
+  ```js
+    const unique = [...new Set(arr)];
+  ```
++ Get a Random Element
+  ```js
+    const random = arr[Math.floor(Math.random() * arr.length)];
+  ```
++ Loop over a Key-Value Pair
+  ```js
+    for(const [i, val] of arr.entries()) {
+        console.log(i, val);
+    }
+  ```
++ `forEach()`
+  + It calls a function for each element in an array.
+  ```js
+    let sum = 0;
+    const numbers = [65, 44, 12, 4];
+    numbers.forEach(myFunction);
+
+    function myFunction(item) {
+      sum += item;
+    }
+  ```
++ `map()`
+  + Creates a new array from calling a function for every array element.
+  + Does not execute the function for empty elements.
+  + Does not change the original array.
+  ```js
+    const numbers = [4, 9, 16, 25];
+    const newArr = numbers.map(Math.sqrt)
+  ```
++ `filter()`
+  +  Creates a new array filled with elements that pass a test provided by a function.
+  +  Does not execute the function for empty elements.
+  +  Does not change the original array.
+  ```js
+   const ages = [32, 33, 16, 40];
+   const result = ages.filter(checkAdult);
+
+   function checkAdult(age) {
+     return age >= 18;
+   }
+  ```
++ `find()`
+  + It returns the value of the first element that passes a test.
+  + It executes a function for each array element.
+  + It returns undefined if no elements are found.
+  + It does not execute the function for empty elements.
+  + It does not change the original array.
+  ```js
+    const ages = [3, 10, 18, 20];
+
+    function checkAge(age) {
+      return age > 18;
+    }
+
+    function myFunction() {
+      document.getElementById("demo").innerHTML = ages.find(checkAge);
+    }
+  ```
++ `findIndex()`
+  + It method executes a function for each array element.
+  + It method returns the index (position) of the first element that passes a test.
+  + It method returns -1 if no match is found.
+  + It method does not execute the function for empty array elements.
+  + It method does not change the original array.
+  ```js
+    const ages = [3, 10, 18, 20];
+
+    ages.findIndex(checkAge); // 3 -> ages[3] = 18
+
+    function checkAge(age) {
+      return age > 18;
+    }
+  ```
++ `reduce()`
+  + It method executes a reducer function for array element.
+  + It method returns a single value: the function's accumulated result.
+  + It method does not execute the function for empty array elements.
+  + It method does not change the original array.
+  ```js
+    const numbers = [175, 50, 25];
+
+    document.getElementById("demo").innerHTML = numbers.reduce(myFunc);
+
+    function myFunc(total, num) {
+      return total - num;
+    }
+  ```
+---
